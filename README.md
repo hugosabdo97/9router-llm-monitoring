@@ -148,6 +148,35 @@ curl -X POST http://127.0.0.1:9090/-/reload
 
 ---
 
+## 🗺️ Roadmap / TODO
+
+### API Key Metrics (planned)
+
+Expose per-API-key usage metrics so quota consumption per client can be tracked.
+
+**1. API key inventory**
+- Total number of registered API keys and how many are active.
+- Source table: `apiKeys` (`id`, `key`, `name`, `isActive`, `createdAt`, `accessRestricted`).
+- Proposed metric: `router9_apikeys{status="active"}` / `router9_apikeys{status="inactive"}`, so `sum(router9_apikeys)` gives the total.
+
+**2. Token usage per API key (rolling 24 hours)**
+- Prompt and completion token totals per API key over the last 24 hours.
+- Source: `usageHistory` joined to `apiKeys` on `usageHistory.apiKey = apiKeys.key`.
+- `usageHistory.apiKey` stores a **masked** key (e.g. `sk-a1a...137d`), while `apiKeys.name` carries the readable label — use `name` as the Prometheus label.
+- Proposed metrics: `router9_apikey_prompt_tokens_24h{api_key=...}` and `router9_apikey_completion_tokens_24h{api_key=...}`.
+
+**Implementation notes**
+- Timestamps in `usageHistory` are ISO-8601 with a `T` separator (`2026-11-22T03:20:41.853Z`). The 24-hour window filter must use `strftime('%Y-%m-%dT%H:%M:%S','now','-24 hours')` to match that format.
+- Avoid a `hour` label on the exported metric — it grows cardinality in Prometheus over time. Export cumulative per-`api_key` values and let Prometheus do the bucketing with `sum by (hour) (rate(...[1h]))`.
+- `usageDaily` already stores daily aggregates but has **no** per-API-key dimension, so per-key totals must come from `usageHistory`.
+- Scope: additive only (~30 lines) — the existing collection loop, gauges, and HTTP server stay unchanged.
+
+### Error visibility (planned)
+- The `Request Status Breakdown` panel currently reads `usageHistory.status`, which only ever contains `ok`. Failed attempts (HTTP 429 quota exhaustion, 400, 502, 503, etc.) are recorded separately in the `requestDetails` table with `status='success'|'error'` and the upstream status code in `response.status`.
+- To surface real errors, the exporter needs to query `requestDetails` and expose the upstream status code as a label, and the panel query should switch from the cumulative counter to `rate(...[5m])`.
+
+---
+
 ## 🤝 Contributing
 Contributions, issues, and feature requests are welcome! Feel free to check the [issues page](https://github.com/hugosabdo97/9router-llm-monitoring/issues).
 
