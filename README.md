@@ -1,5 +1,10 @@
 # 9router LLM Gateway Prometheus Exporter & Grafana Dashboard
 
+[![GitHub release (latest by date)](https://img.shields.io/github/v/release/hugosabdo97/9router-llm-monitoring?style=flat-square)](https://github.com/hugosabdo97/9router-llm-monitoring/releases)
+[![GitHub stars](https://img.shields.io/github/stars/hugosabdo97/9router-llm-monitoring?style=social)](https://github.com/hugosabdo97/9router-llm-monitoring/stargazers)
+[![GitHub forks](https://img.shields.io/github/forks/hugosabdo97/9router-llm-monitoring?style=social)](https://github.com/hugosabdo97/9router-llm-monitoring/network/members)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg?style=flat-square)](LICENSE)
+
 Comprehensive monitoring setup for **9router LLM Gateway**, tracking request rates, token consumption (prompt vs. completion), cost burn rates, provider distribution, model share, and system health in real-time.
 
 ## Dashboard Preview
@@ -127,3 +132,11 @@ curl -X POST http://127.0.0.1:9090/-/reload
 2. In the left sidebar, click **Dashboards** -> **Import**.
 3. Upload the `dashboard.json` file from this repository (or paste its content).
 4. Select your Prometheus data source and click **Import**.
+
+---
+
+## 🤝 Contributing
+Contributions, issues, and feature requests are welcome! Feel free to check [issues page](https://github.com/hugosabdo97/9router-llm-monitoring/issues).
+
+## 📝 License
+This project is [MIT](LICENSE) licensed.
