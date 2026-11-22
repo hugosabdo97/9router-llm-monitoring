@@ -2,6 +2,10 @@
 
 Monitoring setup for 9router LLM Gateway, tracking request rates, token consumption (prompt vs. completion), cost burn rates, provider distribution, and model share.
 
+## Dashboard Preview
+
+![9router Grafana Dashboard](assets/grafana-dashboard.jpg)
+
 ## Components
 
 1. **`exporter.py`**: Python Prometheus exporter running on port `9109` that queries 9router's SQLite database (`/root/.9router/db/data.sqlite`) and health endpoint.
