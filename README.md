@@ -151,28 +151,20 @@ curl -X POST http://127.0.0.1:9090/-/reload
 ## 🗺️ Roadmap / TODO
 
 ### API Key Metrics (planned)
+Expose per-API-key usage and quota metrics.
 
-Expose per-API-key usage metrics so quota consumption per client can be tracked.
+**1. API Key Inventory**
+- Track total and active API keys from the `apiKeys` table.
+- Proposed metric: `router9_apikeys{status="active"|"`inactive"}`.
 
-**1. API key inventory**
-- Total number of registered API keys and how many are active.
-- Source table: `apiKeys` (`id`, `key`, `name`, `isActive`, `createdAt`, `accessRestricted`).
-- Proposed metric: `router9_apikeys{status="active"}` / `router9_apikeys{status="inactive"}`, so `sum(router9_apikeys)` gives the total.
-
-**2. Token usage per API key (rolling 24 hours)**
-- Prompt and completion token totals per API key over the last 24 hours.
-- Source: `usageHistory` joined to `apiKeys` on `usageHistory.apiKey = apiKeys.key`.
-- `usageHistory.apiKey` stores a **masked** key (e.g. `sk-a1a...137d`), while `apiKeys.name` carries the readable label — use `name` as the Prometheus label.
-- Proposed metrics: `router9_apikey_prompt_tokens_24h{api_key=...}` and `router9_apikey_completion_tokens_24h{api_key=...}`.
-
-**Implementation notes**
-- Timestamps in `usageHistory` are ISO-8601 with a `T` separator (`2026-11-22T03:20:41.853Z`). The 24-hour window filter must use `strftime('%Y-%m-%dT%H:%M:%S','now','-24 hours')` to match that format.
-- Avoid a `hour` label on the exported metric — it grows cardinality in Prometheus over time. Export cumulative per-`api_key` values and let Prometheus do the bucketing with `sum by (hour) (rate(...[1h]))`.
-- `usageDaily` already stores daily aggregates but has **no** per-API-key dimension, so per-key totals must come from `usageHistory`.
-- Scope: additive only (~30 lines) — the existing collection loop, gauges, and HTTP server stay unchanged.
+**2. Token Usage per API Key (24h)**
+- Track rolling 24-hour prompt and completion tokens per key by joining `usageHistory` and `apiKeys`.
+- Use readable key names as labels while keeping cardinality low.
 
 ### Docker Support (planned)
-- Add Dockerfile and `docker-compose.yml` with read-only volume mounting for SQLite.
+- Package the exporter into a lightweight container image.
+- Provide a `docker-compose.yml` configuration template.
+- Implement read-only volume mounting for secure access to the host's 9router SQLite database.
 
 ---
 
