@@ -6,6 +6,8 @@ import time
 import threading
 from prometheus_client import generate_latest, CONTENT_TYPE_LATEST, Gauge
 
+# Configuration parameters
+# Adjust these paths and ports to match your actual 9router environment setup
 PORT = 9109
 DB_PATH = "/root/.9router/db/data.sqlite"
 HEALTH_URL = "http://127.0.0.1:20128/api/health"

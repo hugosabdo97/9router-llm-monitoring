@@ -1,6 +1,6 @@
 # 9router LLM Gateway Prometheus Exporter & Grafana Dashboard
 
-Monitoring setup for 9router LLM Gateway, tracking request rates, token consumption (prompt vs. completion), cost burn rates, provider distribution, and model share.
+Comprehensive monitoring setup for **9router LLM Gateway**, tracking request rates, token consumption (prompt vs. completion), cost burn rates, provider distribution, model share, and system health in real-time.
 
 ## Dashboard Preview
 
@@ -8,28 +8,92 @@ Monitoring setup for 9router LLM Gateway, tracking request rates, token consumpt
 
 ## Components
 
-1. **`exporter.py`**: Python Prometheus exporter running on port `9109` that queries 9router's SQLite database (`/root/.9router/db/data.sqlite`) and health endpoint.
-2. **`dashboard.json`**: Complete Grafana dashboard JSON configuration.
+1. **`exporter.py`**: A custom Python Prometheus exporter running on port `9109` that queries 9router's SQLite database (`/root/.9router/db/data.sqlite`) and local health/version APIs.
+2. **`dashboard.json`**: Fully configured Grafana dashboard compatible with Grafana v7/v8/v9/v10+.
+3. **`9router-exporter.service`**: Systemd service unit template to run the exporter persistently in the background.
 
-## Metrics Exposed
+---
 
-- `router9_up`: Health status of 9router API
-- `router9_usage_total_requests`: Total requests logged
-- `router9_usage_prompt_tokens_total`: Total prompt tokens consumed
-- `router9_usage_completion_tokens_total`: Total completion tokens consumed
-- `router9_usage_cost_usd_total`: Total estimated cost in USD
-- `router9_provider_requests_total`: Requests per provider (labeled by provider)
-- `router9_provider_tokens_total`: Tokens per provider and token type
-- `router9_model_requests_total`: Requests per model
-- `router9_status_requests_total`: Requests by HTTP/status code
-- `router9_combos_total`: Total active model combos
+## 🛠️ Complete Installation & Setup Guide
 
-## Installation & Running
+Follow these steps to deploy the exporter and import the dashboard into your monitoring stack.
 
-### 1. Run the Exporter
+### Prerequisites
+- Python 3.8+ with `prometheus_client` installed (`pip install prometheus-client`)
+- Running 9router instance with SQLite database and API endpoints accessible locally.
+
+---
+
+### Step 1: Clone the Repository
+Clone this repository to your monitoring server or 9router host:
+```bash
+git clone https://github.com/hugosabdo97/9router-llm-monitoring.git
+cd 9router-llm-monitoring
+```
+
+---
+
+### Step 2: Configure Environment Paths (If Needed)
+Open `exporter.py` and adjust the configuration parameters at the top to match your actual 9router environment setup:
+```python
+# Configuration parameters
+# Adjust these paths and ports to match your actual 9router environment setup
+PORT = 9109
+DB_PATH = "/root/.9router/db/data.sqlite"
+HEALTH_URL = "http://127.0.0.1:20128/api/health"
+VERSION_URL = "http://127.0.0.1:20128/api/version"
+```
+
+---
+
+### Step 3: Run the Exporter Manually (Test)
+Test the exporter to ensure it successfully reads the SQLite database and responds on port `9109`:
 ```bash
 python3 exporter.py
 ```
+Verify the metrics output in another terminal or via curl:
+```bash
+curl -s http://127.0.0.1:9109/metrics | grep router9
+```
 
-### 2. Import Grafana Dashboard
-Import `dashboard.json` into your Grafana instance connected to Prometheus.
+---
+
+### Step 4: Run as a Persistent Systemd Service
+To ensure the exporter runs continuously and restarts automatically on reboot or crashes:
+
+1. Copy the systemd service file to systemd directory:
+   ```bash
+   cp 9router-exporter.service /etc/systemd/system/9router-exporter.service
+   ```
+2. Reload systemd daemon and enable/start the service:
+   ```bash
+   systemctl daemon-reload
+   systemctl enable --now 9router-exporter
+   ```
+3. Check service status:
+   ```bash
+   systemctl status 9router-exporter
+   ```
+
+---
+
+### Step 5: Configure Prometheus Scraping
+Add the following scrape job to your Prometheus configuration (`prometheus.yml`):
+```yaml
+scrape_configs:
+  - job_name: '9router-gateway'
+    static_configs:
+      - targets: ['127.0.0.1:9109']
+```
+Reload Prometheus to apply changes:
+```bash
+curl -X POST http://127.0.0.1:9090/-/reload
+```
+
+---
+
+### Step 6: Import Grafana Dashboard
+1. Open your Grafana instance.
+2. In the left sidebar, click **Dashboards** -> **Import**.
+3. Upload the `dashboard.json` file from this repository (or paste its content).
+4. Select your Prometheus data source and click **Import**.
