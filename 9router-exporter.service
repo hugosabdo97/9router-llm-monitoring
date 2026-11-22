@@ -5,8 +5,8 @@ After=network.target
 [Service]
 Type=simple
 User=root
-WorkingDirectory=/root/9router-monitoring
-ExecStart=/usr/bin/python3 /root/9router-monitoring/exporter.py
+WorkingDirectory=/root/9router-prometheus-exporter
+ExecStart=/usr/bin/python3 /root/9router-prometheus-exporter/exporter.py
 Restart=always
 
 [Install]
