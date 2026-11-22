@@ -1,8 +1,8 @@
 # 9router LLM Gateway Prometheus Exporter & Grafana Dashboard
 
-[![GitHub release (latest by date)](https://img.shields.io/github/v/release/hugosabdo97/9router-llm-monitoring?style=flat-square)](https://github.com/hugosabdo97/9router-llm-monitoring/releases)
-[![GitHub stars](https://img.shields.io/github/stars/hugosabdo97/9router-llm-monitoring?style=social)](https://github.com/hugosabdo97/9router-llm-monitoring/stargazers)
-[![GitHub forks](https://img.shields.io/github/forks/hugosabdo97/9router-llm-monitoring?style=social)](https://github.com/hugosabdo97/9router-llm-monitoring/network/members)
+[![GitHub release (latest by date)](https://img.shields.io/github/v/release/hugosabdo97/9router-prometheus-exporter?style=flat-square)](https://github.com/hugosabdo97/9router-prometheus-exporter/releases)
+[![GitHub stars](https://img.shields.io/github/stars/hugosabdo97/9router-prometheus-exporter?style=social)](https://github.com/hugosabdo97/9router-prometheus-exporter/stargazers)
+[![GitHub forks](https://img.shields.io/github/forks/hugosabdo97/9router-prometheus-exporter?style=social)](https://github.com/hugosabdo97/9router-prometheus-exporter/network/members)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg?style=flat-square)](LICENSE)
 
 Real-time monitoring and observability for the **9router LLM Gateway**. This repository bundles a custom Prometheus exporter, a ready-to-import Grafana dashboard, and a systemd unit to keep the exporter running persistently.
@@ -91,8 +91,8 @@ The dashboard contains 13 panels organised into three sections.
 
 ### Step 1: Clone the Repository
 ```bash
-git clone https://github.com/hugosabdo97/9router-llm-monitoring.git
-cd 9router-llm-monitoring
+git clone https://github.com/hugosabdo97/9router-prometheus-exporter.git
+cd 9router-prometheus-exporter
 ```
 
 ### Step 2: Install Dependencies
@@ -178,7 +178,7 @@ Expose per-API-key usage metrics so quota consumption per client can be tracked.
 ---
 
 ## 🤝 Contributing
-Contributions, issues, and feature requests are welcome! Feel free to check the [issues page](https://github.com/hugosabdo97/9router-llm-monitoring/issues).
+Contributions, issues, and feature requests are welcome! Feel free to check the [issues page](https://github.com/hugosabdo97/9router-prometheus-exporter/issues).
 
 ## 📝 License
 This project is [MIT](LICENSE) licensed.
