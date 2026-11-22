@@ -14,6 +14,36 @@ Comprehensive monitoring setup for **9router LLM Gateway**, tracking request rat
 
 ---
 
+## 📊 Exposed Prometheus Metrics
+
+The exporter (`exporter.py`) collects and exposes the following metrics on port `9109` (`/metrics`):
+
+### 1. System & Service Health
+| Metric Name | Type | Description | Labels / Notes |
+| :--- | :--- | :--- | :--- |
+| `router9_up` | Gauge | 9router API health check status | `1` = UP, `0` = DOWN |
+| `router9_version_info` | Gauge | 9router version information | Label: `version="vX.X.X"` |
+| `router9_combos_total` | Gauge | Total configured model combos | - |
+
+### 2. Global Usage & Cost Totals
+| Metric Name | Type | Description |
+| :--- | :--- | :--- |
+| `router9_usage_total_requests` | Gauge | Total requests logged in the database |
+| `router9_usage_prompt_tokens_total` | Gauge | Total prompt tokens consumed |
+| `router9_usage_completion_tokens_total` | Gauge | Total completion tokens consumed |
+| `router9_usage_cost_usd_total` | Gauge | Total estimated cost in USD ($) |
+
+### 3. Granular Breakdown Metrics
+| Metric Name | Type | Description | Labels |
+| :--- | :--- | :--- | :--- |
+| `router9_provider_requests_total` | Gauge | Requests per AI provider | `provider` (e.g., `gemini`, `codex`, `github`) |
+| `router9_provider_tokens_total` | Gauge | Token consumption per provider | `provider`, `token_type` (`prompt` / `completion`) |
+| `router9_model_requests_total` | Gauge | Requests per LLM model | `model` (e.g., `gemini-3.5-flash-lite`, `gpt-5.6-luna`) |
+| `router9_status_requests_total` | Gauge | Requests by HTTP/response status | `status` (e.g., `ok`, `error`) |
+| `router9_active_connections_total` | Gauge | Active provider connections | `provider` |
+
+---
+
 ## 🛠️ Complete Installation & Setup Guide
 
 Follow these steps to deploy the exporter and import the dashboard into your monitoring stack.
