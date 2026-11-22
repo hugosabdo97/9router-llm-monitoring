@@ -1,0 +1,13 @@
+[Unit]
+Description=9router Prometheus Exporter
+After=network.target
+
+[Service]
+Type=simple
+User=root
+WorkingDirectory=/root/9router-monitoring
+ExecStart=/usr/bin/python3 /root/9router-monitoring/exporter.py
+Restart=always
+
+[Install]
+WantedBy=multi-user.target
