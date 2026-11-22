@@ -171,9 +171,8 @@ Expose per-API-key usage metrics so quota consumption per client can be tracked.
 - `usageDaily` already stores daily aggregates but has **no** per-API-key dimension, so per-key totals must come from `usageHistory`.
 - Scope: additive only (~30 lines) — the existing collection loop, gauges, and HTTP server stay unchanged.
 
-### Error visibility (planned)
-- The `Request Status Breakdown` panel currently reads `usageHistory.status`, which only ever contains `ok`. Failed attempts (HTTP 429 quota exhaustion, 400, 502, 503, etc.) are recorded separately in the `requestDetails` table with `status='success'|'error'` and the upstream status code in `response.status`.
-- To surface real errors, the exporter needs to query `requestDetails` and expose the upstream status code as a label, and the panel query should switch from the cumulative counter to `rate(...[5m])`.
+### Docker Support (planned)
+- Add Dockerfile and `docker-compose.yml` with read-only volume mounting for SQLite.
 
 ---
 
