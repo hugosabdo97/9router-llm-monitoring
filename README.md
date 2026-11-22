@@ -95,6 +95,11 @@ git clone https://github.com/hugosabdo97/9router-llm-monitoring.git
 cd 9router-llm-monitoring
 ```
 
+### Step 2: Install Dependencies
+```bash
+pip install prometheus-client
+```
+
 ### Step 2: Configure Environment Paths
 Edit `exporter.py` and adjust the configuration block at the top to match your 9router setup:
 ```python
